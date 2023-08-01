@@ -1,0 +1,35 @@
+import os
+import pandas as pd
+
+# Replace 'your_folder_path' with the actual path of the folder containing CSV files
+folder_path = 'your_folder_path'
+
+# Get a list of all files in the folder
+file_list = os.listdir(folder_path)
+
+# Function to process a single file
+def process_file(file_path):
+    # Read the CSV file into a Pandas DataFrame
+    df = pd.read_csv(file_path)
+
+    # Sort the data by alignment_length and %identity in descending order
+    df.sort_values(['alignmentlength', '%identity'], ascending=[False, False], inplace=True)
+
+    # Drop duplicate strains, keeping the first occurrence (highest alignment length and %identity)
+    df.drop_duplicates(subset='Strain', keep='first', inplace=True)
+
+    # Sort the final DataFrame by strain in descending order
+    df.sort_values(by='Strain', ascending=False, inplace=True)
+
+    # Display the result DataFrame
+    result_df = df[['Strain', '%identity', 'alignmentlength']]
+    result_df.reset_index(drop=True, inplace=True)
+    print(result_df)
+
+# Loop through each file in the folder and process it
+for file_name in file_list:
+    if file_name.endswith('.csv'):
+        file_path = os.path.join(folder_path, file_name)
+        print(f"Processing file: {file_name}")
+        process_file(file_path)
+        print("\n")
