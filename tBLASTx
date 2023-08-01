@@ -1,0 +1,31 @@
+#!/bin/bash
+echo "running tblastx script for ID93, ID91, M72 vaccines antigens homology"
+
+# Making blastp database from ref_tb.txt file
+makeblastdb -in database_ref.fasta -dbtype prot
+
+# Path to the folder containing protein sequence files
+protein_folder="path/to/protein_sequences"
+
+# Loop through each file in the protein folder
+for file in "$protein_folder"/*.txt; do
+    # Extract the file name without the extension
+    filename=$(basename -- "$file")
+    filename_no_extension="${filename%.*}"
+
+##Running the algorith for protein sequence against the database
+
+# for showing the output in pairwise 
+tblastx -query "$file" -db database_ref.fasta -evalue 1e-50 -out "${filename_no_extension}_prot_results_pairwise.txt" -outfmt 0
+
+#For Showing the results in query anchored format with identities
+tblastx -query "$file" -db database_ref.fasta -evalue 1e-50 -out "${filename_no_extension}_prot_results_pairwise.txt" -outfmt 1
+
+# For showing the results in tabular form with comments
+tblastx -query "$file" -db database_ref.fasta -evalue 1e-50 -out "${filename_no_extension}_prot_results_pairwise.txt" -outfmt 7
+
+# For showing the results in comma-separated values
+tblastx -query "$file" -db database_ref.fasta -evalue 1e-50 -out "${filename_no_extension}_prot_results_pairwise.txt" -outfmt 10
+
+ls
+echo "All done"
