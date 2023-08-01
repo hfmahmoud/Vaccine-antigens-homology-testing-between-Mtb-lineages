@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Making blastp database from ref_tb.txt file
 makeblastdb -in database_ref.fasta -dbtype prot
 
